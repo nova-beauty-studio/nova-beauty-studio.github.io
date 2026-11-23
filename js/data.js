@@ -51,6 +51,11 @@ const ADDRESS = 'Kaiserstraße 54A, 66849 Landstuhl';      // địa chỉ hiể
 const GOOGLE_REVIEW_URL  = '';
 const GOOGLE_REVIEWS_ALL = '';
 
+/* Điểm CHÍNH THỨC trên Google Maps (tùy chọn).
+   Chép đúng số đang hiện trên trang Google của tiệm, ví dụ: { score: 4.9, count: 57 }
+   Để null thì website tự tính điểm từ danh sách REVIEWS bên dưới. */
+const GOOGLE_RATING = { score: null, count: null };
+
 /* Dán đánh giá THẬT của khách (copy từ Google / Facebook). Mỗi đánh giá:
    {
      name:  'Tên khách',

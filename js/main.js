@@ -56,10 +56,12 @@ function renderReviews(){
   const list = [...REVIEWS].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   const n = list.length;
   if(!n){ $('#bewertungen').hidden = true; return; }
-  const avg = list.reduce((a,r)=>a+r.stars,0)/n;
+  const g = (typeof GOOGLE_RATING!=="undefined" && GOOGLE_RATING.score) ? GOOGLE_RATING : null;
+  const avg = g ? g.score : list.reduce((a,r)=>a+r.stars,0)/n;
   $('#avg').textContent = lang==='de' ? avg.toFixed(1).replace('.',',') : avg.toFixed(1);
   $('#avg-stars').innerHTML = STAR_ROW(Math.round(avg));
-  $('#count').textContent = `${T[lang].r_from} ${n} ${T[lang].reviews}`;
+  $('#count').textContent = g ? `${T[lang].r_from} ${g.count||n} ${T[lang].reviews} · Google` : `${T[lang].r_from} ${n} ${T[lang].reviews}`;
+  $('#bars').hidden = !!g;   /* dùng điểm Google thì ẩn thanh phân bố (vì chỉ tính được từ các đánh giá đã nhập) */
   $('#bars').innerHTML = [5,4,3,2,1].map(s=>{const c=list.filter(r=>r.stars===s).length;
     return `<div class="bar"><span>${s} <i>★</i></span><div><b style="width:${n?c/n*100:0}%"></b></div><em>${c}</em></div>`}).join('');
   $('#rv').innerHTML = list.slice(0,shown).map((r,i)=>`<article class="rv">
