@@ -54,7 +54,7 @@ const GOOGLE_REVIEWS_ALL = '';
 /* Điểm CHÍNH THỨC trên Google Maps (tùy chọn).
    Chép đúng số đang hiện trên trang Google của tiệm, ví dụ: { score: 4.9, count: 57 }
    Để null thì website tự tính điểm từ danh sách REVIEWS bên dưới. */
-const GOOGLE_RATING = { score: null, count: null };
+const GOOGLE_RATING = { score: 4.9, count: 57 };
 
 /* Dán đánh giá THẬT của khách (copy từ Google / Facebook). Mỗi đánh giá:
    {
