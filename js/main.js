@@ -2,6 +2,7 @@
    XỬ LÝ CỦA TRANG – thường không cần sửa file này
    ===================================================== */
 const $ = s => document.querySelector(s);
+document.documentElement.classList.add(location.protocol.startsWith('http') ? 'is-http' : 'is-file');
 /* ngôn ngữ: lựa chọn trước đó, nếu chưa có thì theo ngôn ngữ của máy khách */
 const savedLang = localStorage.getItem('nova-lang');
 let lang = T[savedLang] ? savedLang : ((navigator.language||'de').toLowerCase().startsWith('de') ? 'de' : 'en');
