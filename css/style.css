@@ -410,3 +410,21 @@ header.scrolled{box-shadow:0 6px 24px rgba(110,44,58,.1)}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal{opacity:1;transform:none}
 }
+
+/* =====================================================
+   NGÀY LỄ (js/festive.js)
+   ===================================================== */
+.fest-bar{position:relative;z-index:51;display:flex;align-items:center;justify-content:center;gap:12px;min-height:38px;padding:7px 44px;color:#fff;
+  font:500 .88rem Inter,system-ui,sans-serif;text-align:center;background-size:200% 100%!important;animation:festBg 8s linear infinite}
+.fest-bar .fest-txt{text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.fest-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;border:0;background:rgba(255,255,255,.2);color:#fff;font-size:1rem;line-height:1;cursor:pointer}
+.fest-x:hover{background:rgba(255,255,255,.35)}
+@keyframes festBg{to{background-position:200% 0}}
+.fest-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:45}
+@media (max-width:560px){.fest-bar{font-size:.78rem;padding:6px 38px;min-height:34px}}
+/* Weihnachten: tuyết đọng nhẹ dưới thanh menu */
+.fest-weihnachten header::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:8px;pointer-events:none;
+  background:radial-gradient(circle at 6px 0,#fff 5px,transparent 5.5px) 0 0/16px 8px repeat-x;filter:drop-shadow(0 1px 1px rgba(0,0,0,.08))}
+.fest-ostern .fest-bar{color:#3b4a1e}
+.fest-ostern .fest-bar .fest-txt{text-shadow:none}
+.fest-ostern .fest-x{background:rgba(0,0,0,.12);color:#3b4a1e}
