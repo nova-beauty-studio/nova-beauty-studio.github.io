@@ -125,3 +125,50 @@ lb.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Ma
 
 $('#year').textContent = new Date().getFullYear();
 applyLang();
+
+/* =====================================================
+   HIỆU ỨNG KHI CUỘN TRANG
+   ===================================================== */
+const REVEAL_SEL = '.head,.scard,.feat,.infobar,.chips,.mcat,.gal figure,.vid,.rv-sum,.rv,.map-card,.map-frame,.fcol,.pnote';
+const revealIO = 'IntersectionObserver' in window ? new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); revealIO.unobserve(e.target); } });
+},{threshold:.12, rootMargin:'0px 0px -40px 0px'}) : null;
+
+function observeReveal(){
+  document.querySelectorAll(REVEAL_SEL).forEach(el=>{
+    if(el.classList.contains('reveal')) return;
+    if(!revealIO){ el.classList.add('reveal','in'); return; }
+    /* các thẻ cùng hàng hiện lần lượt */
+    const i = [...el.parentElement.children].indexOf(el);
+    el.style.setProperty('--d', (i % 4) * 0.09 + 's');
+    el.classList.add('reveal');
+    revealIO.observe(el);
+  });
+}
+
+/* thanh menu có bóng khi cuộn */
+const hdr = document.querySelector('header');
+addEventListener('scroll', ()=>hdr.classList.toggle('scrolled', scrollY > 10), {passive:true});
+
+/* bảng giá: nút danh mục tự sáng theo phần đang xem */
+let spyIO;
+function setupSpy(){
+  if(!('IntersectionObserver' in window)) return;
+  spyIO && spyIO.disconnect();
+  const chips = $('#chips');
+  spyIO = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      chips.querySelectorAll('a').forEach(a=>a.classList.toggle('on', a.getAttribute('href') === '#'+e.target.id));
+      const on = chips.querySelector('a.on');
+      if(on) chips.scrollTo({left: on.offsetLeft - chips.clientWidth/2 + on.offsetWidth/2, behavior:'smooth'});
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  document.querySelectorAll('.mcat').forEach(c=>spyIO.observe(c));
+}
+
+/* chạy lại sau mỗi lần trang vẽ lại nội dung (đổi ngôn ngữ, xem thêm đánh giá) */
+const _applyLang = applyLang;
+applyLang = function(){ _applyLang(); observeReveal(); setupSpy(); };
+$('#more-btn').addEventListener('click', observeReveal);
+observeReveal(); setupSpy();
