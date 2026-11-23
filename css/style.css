@@ -51,7 +51,7 @@
   .hero{position:relative;overflow:hidden;padding:0;background:
       radial-gradient(circle at 12% 18%,#fff 0,transparent 40%),
       radial-gradient(circle at 30% 85%,#f8e1dc 0,transparent 45%),var(--blush)}
-  .hero-grid{display:grid;grid-template-columns:1fr 1.15fr;min-height:min(540px,72vh);align-items:center}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;min-height:min(540px,72vh);align-items:center;padding:28px 0}
   .hero-text{padding:30px 0;text-align:center;position:relative;z-index:2}
   .hero-text .welcome{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(1.8rem,3.6vw,2.6rem);color:var(--text)}
   .hero-text .logo{width:min(370px,90%);margin:4px auto 0}
@@ -63,8 +63,8 @@
   .cta-main small{font-size:.85rem;opacity:.85}
   .cta-alt{display:block;margin-top:12px;font-size:.9rem;color:var(--muted)}
   .cta-alt a{color:var(--wine);text-decoration:underline;text-underline-offset:3px}
-  .hero-img{position:relative;align-self:stretch;min-height:420px;margin-right:calc((100vw - min(1200px,92vw)) / -2)}
-  .hero-img .shape{position:absolute;inset:0;border-radius:52% 0 0 52% / 100% 0 0 100%;overflow:hidden;border-left:5px solid var(--gold-l);box-shadow:-6px 0 0 -1px rgba(216,178,106,.35)}
+  .hero-img{position:relative;align-self:stretch;min-height:440px}
+  .hero-img .shape{position:absolute;inset:0;border-radius:50% 28px 28px 50% / 60% 28px 28px 60%;overflow:hidden;border:4px solid var(--gold-l);box-shadow:0 18px 40px rgba(110,44,58,.18)}
   .hero-img img{width:100%;height:100%;object-fit:cover}
   .sparkle{position:absolute;color:#fff;opacity:.85;pointer-events:none;animation:tw 3s ease-in-out infinite}
   @keyframes tw{50%{opacity:.25;transform:scale(.7)}}
@@ -296,9 +296,9 @@
 @media (max-width:900px){
   /* ảnh lớn -> nền mờ phía sau logo */
   .hero{min-height:0}
-  .hero-grid{min-height:0;position:relative}
+  .hero-grid{min-height:0;position:relative;gap:0;padding:0}
   .hero-img{position:absolute;inset:0;order:0;height:auto;max-height:none;min-height:0;margin:0 -4vw;opacity:.16}
-  .hero-img .shape{border:0;border-radius:0}
+  .hero-img .shape{border:0;border-radius:0;box-shadow:none}
   .hero-img .sparkle{display:none}
   .hero-text{padding:18px 0 22px}
   .hero-text .welcome{font-size:1.35rem}
