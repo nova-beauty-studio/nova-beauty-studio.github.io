@@ -20,54 +20,66 @@ const FESTIVE_ON = true;
       mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;
     return day(y,mo,da);
   }
-  function firstAdvent(y){ const x=day(y,12,24); return addDays(x, -x.getDay() - 21); } // 4. Advent = Chủ nhật cuối cùng <= 24/12
   function motherDay(y){ const x=day(y,5,1); return addDays(x, ((7-x.getDay())%7) + 7); }
 
+  /* Trang trí bắt đầu TRƯỚC ngày lễ bao nhiêu ngày (đổi số này nếu muốn) */
+  const LEAD_DAYS = 30;
+
+  /* main = ngày lễ chính · after = còn giữ trang trí thêm bao nhiêu ngày sau lễ */
   const SEASONS = {
-    weihnachten:{ range:y=>[firstAdvent(y), day(y,12,26)],
+    weihnachten:{ main:y=>day(y,12,24), after:2,
       items:['❄','❅','❆','•','•','•'], colors:['#ffffff','#dfe8f7','#c9d8f0'], fall:'snow',
       text:{de:'🎄 Frohe Weihnachten & eine schöne Adventszeit!', en:'🎄 Merry Christmas & a lovely Advent season!'},
       bar:'linear-gradient(90deg,#7a1f2b,#a12a3a,#7a1f2b)' },
-    silvester:{ range:y=>[day(y,12,27), day(y+1,1,6)], rangePrev:y=>[day(y-1,12,27), day(y,1,6)],
+    silvester:{ main:y=>day(y,12,31), after:6,
       items:['✦','✦','✧','★'], colors:['#e0a92e','#c8902a','#f2c14e','#b8862f'], fall:'glitter',
       text:{de:'🎆 Frohes neues Jahr! Wir freuen uns auf Sie.', en:'🎆 Happy New Year! We look forward to seeing you.'},
       bar:'linear-gradient(90deg,#2a1d18,#5a4321,#2a1d18)' },
-    valentin:{ range:y=>[day(y,2,7), day(y,2,14)],
+    valentin:{ main:y=>day(y,2,14), after:0,
       items:['❤','❥','♥'], colors:['#e5486b','#f27a96','#c92f55','#ffb3c4'], fall:'float',
       text:{de:'❤️ Happy Valentinstag – verwöhnen Sie sich oder Ihre Liebsten!', en:'❤️ Happy Valentine’s Day – treat yourself or your loved one!'},
       bar:'linear-gradient(90deg,#b8264b,#e5486b,#b8264b)' },
-    fasching:{ range:y=>{const e=easter(y); return [addDays(e,-52), addDays(e,-46)];},
+    fasching:{ main:y=>addDays(easter(y),-48), after:2, // Rosenmontag → Aschermittwoch
       items:['▬','■','●','▲'], colors:['#e53935','#fdd835','#43a047','#1e88e5','#8e24aa','#fb8c00'], fall:'confetti',
       text:{de:'🎭 Helau! Fröhliche Fastnacht!', en:'🎭 Helau! Happy Carnival!'},
       bar:'linear-gradient(90deg,#8e24aa,#1e88e5,#43a047,#fdd835,#e53935)' },
-    ostern:{ range:y=>{const e=easter(y); return [addDays(e,-7), addDays(e,1)];},
+    ostern:{ main:y=>easter(y), after:1, // Ostersonntag + Ostermontag
       items:['🥚','🌷','🐣','🌼'], colors:[], fall:'drift', emoji:true,
       text:{de:'🐣 Frohe Ostern!', en:'🐣 Happy Easter!'},
       bar:'linear-gradient(90deg,#8bc34a,#f8bbd0,#fff59d,#8bc34a)' },
-    muttertag:{ range:y=>{const m=motherDay(y); return [addDays(m,-7), m];},
+    muttertag:{ main:y=>motherDay(y), after:0,
       items:['🌸','💐','💗','🌷'], colors:[], fall:'drift', emoji:true,
       text:{de:'💐 Alles Liebe zum Muttertag – das perfekte Geschenk: ein Beauty-Termin!', en:'💐 Happy Mother’s Day – the perfect gift: a beauty appointment!'},
       bar:'linear-gradient(90deg,#c2185b,#f06292,#c2185b)' },
-    halloween:{ range:y=>[day(y,10,24), day(y,10,31)],
+    halloween:{ main:y=>day(y,10,31), after:0,
       items:['🎃','🍂','🦇','🍁'], colors:[], fall:'drift', emoji:true,
       text:{de:'🎃 Happy Halloween!', en:'🎃 Happy Halloween!'},
       bar:'linear-gradient(90deg,#3e2723,#e65100,#3e2723)' },
   };
 
-  /* ---------- lễ đang diễn ra hôm nay? ---------- */
+  /* ---------- hôm nay đang trong mùa lễ nào? ----------
+     Mỗi lễ: từ (ngày lễ − LEAD_DAYS) đến (ngày lễ + after).
+     Hai lễ trùng nhau (vd. Noel & Silvester) → chọn lễ có ngày chính gần hôm nay nhất. */
+  const DAY_MS = 864e5;
   function currentSeason(now){
     const y=now.getFullYear(), t=day(y,now.getMonth()+1,now.getDate());
+    let best=null;
     for(const [key,s] of Object.entries(SEASONS)){
-      const ranges=[s.range(y)]; if(s.rangePrev) ranges.push(s.rangePrev(y));
-      if(ranges.some(([a,b])=>t>=a && t<=b)) return key;
+      for(const yy of [y-1, y]){            // y-1: lễ cuối năm trước kéo sang tháng 1
+        const m=s.main(yy), a=addDays(m,-LEAD_DAYS), b=addDays(m,s.after);
+        if(t<a || t>b) continue;
+        const dist=Math.abs(Math.round((m-t)/DAY_MS));
+        if(!best || dist<best.dist) best={key, dist, year:m.getFullYear()};
+      }
     }
-    return null;
+    return best;
   }
   const forced = new URLSearchParams(location.search).get('fest');
-  const key = SEASONS[forced] ? forced : currentSeason(new Date());
-  if(!key) return;
+  const cur = SEASONS[forced] ? {key:forced, year:new Date().getFullYear()} : currentSeason(new Date());
+  if(!cur) return;
+  const key = cur.key;
   const S = SEASONS[key];
-  const STORE = 'nova-fest-off-' + key + '-' + new Date().getFullYear();
+  const STORE = 'nova-fest-off-' + key + '-' + cur.year;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- dải chào phía trên cùng ---------- */
