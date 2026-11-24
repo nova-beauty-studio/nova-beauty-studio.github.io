@@ -80,7 +80,6 @@ const FESTIVE_ON = true;
   const key = cur.key;
   const S = SEASONS[key];
   const STORE = 'nova-fest-off-' + key + '-' + cur.year;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- dải chào phía trên cùng ---------- */
   const bar = document.createElement('div');
@@ -96,7 +95,7 @@ const FESTIVE_ON = true;
   /* ---------- hạt rơi (tuyết, tim, confetti...) ---------- */
   let canvas, ctx, parts=[], raf, W, H, dpr;
   function startParticles(){
-    if(reduce || localStorage.getItem(STORE)) return;
+    if(localStorage.getItem(STORE)) return; // luôn chạy, kể cả máy bật "Giảm chuyển động" (theo yêu cầu chủ tiệm)
     canvas = document.createElement('canvas');
     canvas.className = 'fest-canvas'; canvas.setAttribute('aria-hidden','true');
     document.body.appendChild(canvas);

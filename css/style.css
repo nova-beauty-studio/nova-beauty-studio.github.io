@@ -23,7 +23,7 @@
   .head .line svg{width:26px;height:18px}
 
   /* ===== Header ===== */
-  header{position:sticky;top:0;z-index:50;background:rgba(251,241,238,.95);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
+  header{position:sticky;top:0;z-index:50;background:rgba(251,241,238,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:78px;gap:1.2rem}
   .brand{display:flex;flex-direction:column;align-items:center;line-height:1}
   .brand svg{width:34px;height:22px;color:var(--gold)}
@@ -405,14 +405,6 @@ header.scrolled{box-shadow:0 6px 24px rgba(110,44,58,.1)}
 .bar b{transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
 .rv-sum:not(.in) .bar b{width:0!important}
 
-/* --- tắt hiệu ứng nếu máy khách bật "giảm chuyển động" --- */
-@media (prefers-reduced-motion:reduce){
-  /* máy tắt hiệu ứng: bỏ chuyển động liên tục / trượt, giữ hiện dần mềm (chỉ mờ -> rõ) */
-  .hero-img .shape img,.logo-wrap::after,.cta-main::after,.btn-book::after,.float a::before,.fest-bar,.sparkle{animation:none!important}
-  .hero-text > *,.hero-text .logo-wrap,.float a,.hero-img{animation-name:fadeOnly!important}
-  .reveal{transform:none!important}
-  .svc-item:hover{padding-left:20px}
-}
 @keyframes fadeOnly{from{opacity:0}to{opacity:1}}
 /* vệt sáng logo chỉ bật khi chạy trên web (http/https); mở file trực tiếp từ ổ đĩa thì trình duyệt chặn ảnh mặt nạ */
 
